@@ -1,6 +1,8 @@
 package gopher
 
 import (
+	"fmt"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -20,6 +22,7 @@ func SetBounds(x, y, width, height, innerThickness float32) {
 	lowerBound = rl.NewRectangle(x, height-innerThickness, width, innerThickness)
 	rightBound = rl.NewRectangle(width-innerThickness, y, innerThickness, height)
 	leftBound = rl.NewRectangle(x, y, innerThickness, height)
+	fmt.Println("new bounds set")
 }
 
 func DrawBounds(color rl.Color) {
@@ -64,19 +67,30 @@ func AddGopher(gophers []Gopher, rect rl.Rectangle, vel rl.Vector2) []Gopher{
 	return append(gophers, g)
 }
 
-
-func handleCollisionGophersBounds(gophers []Gopher) {
-	for i := range gophers {
-		if rl.CheckCollisionRecs(gophers[i].Rect, upperBound) {
-			gophers[i].Vel.Y = gophers[i].Vel.Y
-		}
-	}
-}
-
 func UpdateGophers(gophers []Gopher, dt float32) {
 	for i := range gophers {
-		gophers[i].Rect.X += gophers[i].Vel.X * dt * 10
-		gophers[i].Rect.Y += gophers[i].Vel.Y * dt * 10
+		newX := gophers[i].Rect.X + gophers[i].Vel.X * dt * 10
+		newY := gophers[i].Rect.Y + gophers[i].Vel.Y * dt * 10
+		newRect := rl.NewRectangle(newX, newY,
+			gophers[i].Rect.Width, 
+			gophers[i].Rect.Height)
+		if rl.CheckCollisionRecs(newRect, upperBound) {
+			gophers[i].Vel.Y = -gophers[i].Vel.Y
+			newRect.Y = upperBound.Y + upperBound.Height
+		}
+		if rl.CheckCollisionRecs(newRect, lowerBound) {
+			gophers[i].Vel.Y = -gophers[i].Vel.Y
+			newRect.Y = lowerBound.Y - lowerBound.Height - newRect.Height
+		}
+		if rl.CheckCollisionRecs(newRect, rightBound) {
+			gophers[i].Vel.X = -gophers[i].Vel.X
+			newRect.X = rightBound.X - rightBound.Width - newRect.Width
+		}
+		if rl.CheckCollisionRecs(newRect, leftBound) {
+			gophers[i].Vel.X = -gophers[i].Vel.X
+			newRect.X = leftBound.X + leftBound.Width
+		}
+		gophers[i].Rect = newRect
 	}
 }
 
