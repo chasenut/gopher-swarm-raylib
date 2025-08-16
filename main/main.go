@@ -17,6 +17,8 @@ const (
 var (
 	running bool = true
 	dt float32 = rl.GetFrameTime()
+
+	showDebugPanel bool = true
 	
 	bkgColor rl.Color = rl.NewColor(22, 22, 35, 255)
 
@@ -34,6 +36,8 @@ var (
 
 	gopherTexture rl.Texture2D
 	gophers []gopher.Gopher = []gopher.Gopher{}
+	gopherCount int32 = 0
+	toogleGopherCreation bool = false
 )
 
 func createGopher() {
@@ -47,7 +51,8 @@ func createGopher() {
 		(0.5-rand.Float32()) * 50, 
 		(0.5-rand.Float32()) * 50,
 		)
-	gopher.AddGopher(&gophers, rect, vel)
+	gophers = gopher.AddGopher(gophers, rect, vel)
+	gopherCount++
 }
 
 func input() {
@@ -67,8 +72,8 @@ func input() {
 		cameraMoving = true
 		cameraLeft = true
 	}
-	if rl.IsKeyPressed(rl.KeyQ) {
-		createGopher()
+	if rl.IsKeyDown(rl.KeyQ) {
+		toogleGopherCreation = true
 	}
 }
 
@@ -96,7 +101,26 @@ func update() {
 	cameraUp, cameraDown, cameraRight, cameraLeft = false, false, false, false
 	camera.Target = cameraOffset
 
-	gopher.UpdateGophers(&gophers, dt)
+	if toogleGopherCreation {
+		createGopher()
+	}
+	toogleGopherCreation = false
+	gopher.UpdateGophers(gophers, dt)
+}
+
+func drawDebugPanel() {
+	if !showDebugPanel {
+		return
+	}
+	rl.DrawText(fmt.Sprintf("FPS: %.3f", float32(1.0 / dt)),
+		int32(cameraOffset.X)-screenWidth/2+20, 
+		int32(cameraOffset.Y)-screenHeight/2+20, 
+		40, rl.LightGray)
+
+	rl.DrawText(fmt.Sprintf("Gophers: %v", gopherCount),
+		int32(cameraOffset.X)-screenWidth/2+20, 
+		int32(cameraOffset.Y)-screenHeight/2+60, 
+		40, rl.LightGray)
 }
 
 func drawScene() {
@@ -105,13 +129,9 @@ func drawScene() {
 
 	rl.DrawTexture(perlinTexture, 0, 0, hueTint)
 
-
-	rl.DrawText(fmt.Sprintf("%.2f", float32(1.0 / dt)),
-		int32(cameraOffset.X)-screenWidth/2+20, 
-		int32(cameraOffset.Y)-screenHeight/2+20, 
-		40, rl.LightGray)
-
 	gopher.DrawGophers(gophers, gopherTexture)
+
+	drawDebugPanel() // bool: showDebugPanel
 }
 
 func render() {

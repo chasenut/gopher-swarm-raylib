@@ -1,8 +1,6 @@
 package gopher
 
 import (
-	"fmt"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -16,30 +14,28 @@ var (
 )
 
 func DrawGophers(gophers []Gopher, texture rl.Texture2D) {
-	for _, g := range gophers {
+	for i := range gophers {
 		rl.DrawTexturePro(texture, 
 			GopherSrc, 
-			g.Rect,
+			gophers[i].Rect,
 			rl.NewVector2(0, 0),
 			0,
 			rl.White)
 	}
 }
 
-func AddGopher(gophers *[]Gopher, rect rl.Rectangle, vel rl.Vector2) {
+func AddGopher(gophers []Gopher, rect rl.Rectangle, vel rl.Vector2) []Gopher{
 	g := Gopher {
 		Rect: rect,
 		Vel: vel,
 	}
-	*gophers = append(*gophers, g)
+	return append(gophers, g)
 }
 
-func UpdateGophers(gophers *[]Gopher, dt float32) {
-	for _, g := range *gophers {
-		fmt.Println("velx: ", g.Rect.X)
-		fmt.Println("vely: ", g.Rect.Y)
-		g.Rect.X += g.Vel.X * dt * 1000
-		g.Rect.Y += g.Vel.Y * dt * 1000
+func UpdateGophers(gophers []Gopher, dt float32) {
+	for i := range gophers {
+		gophers[i].Rect.X += gophers[i].Vel.X * dt * 10
+		gophers[i].Rect.Y += gophers[i].Vel.Y * dt * 10
 	}
 }
 
