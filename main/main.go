@@ -38,6 +38,7 @@ var (
 	gophers []gopher.Gopher = []gopher.Gopher{}
 	gopherCount int32 = 0
 	toogleGopherCreation bool = false
+
 )
 
 func createGopher() {
@@ -54,6 +55,7 @@ func createGopher() {
 	gophers = gopher.AddGopher(gophers, rect, vel)
 	gopherCount++
 }
+
 
 func input() {
 	if rl.IsKeyDown(rl.KeyW) || rl.IsKeyDown(rl.KeyUp) {
@@ -102,7 +104,9 @@ func update() {
 	camera.Target = cameraOffset
 
 	if toogleGopherCreation {
-		createGopher()
+		for range 1 {
+			createGopher()
+		}
 	}
 	toogleGopherCreation = false
 	gopher.UpdateGophers(gophers, dt)
@@ -131,6 +135,7 @@ func drawScene() {
 
 	gopher.DrawGophers(gophers, gopherTexture)
 
+	gopher.DrawBounds(rl.White)
 	drawDebugPanel() // bool: showDebugPanel
 }
 
@@ -160,6 +165,7 @@ func initialize() {
 
 	
 	gopherTexture = rl.LoadTexture("res/panic.png")
+	gopher.SetBounds(0, 0, 800, 800, 10)
 }
 
 func exit() {
