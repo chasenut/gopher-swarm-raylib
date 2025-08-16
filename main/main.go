@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/chasenut/gorl-learn/gopher"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -108,7 +109,7 @@ func initialize() {
 	cameraTarget.Y = float32(screenHeight/2)
 	cameraOffset.X = 0
 	cameraOffset.Y = 0
-	camera = rl.NewCamera2D(cameraTarget, cameraOffset, 1, 1)
+	camera = rl.NewCamera2D(cameraTarget, cameraOffset, 0, 1)
 
 	perlinImg = rl.GenImagePerlinNoise(800, 800, 0, 0, 5)
 	perlinTexture = rl.LoadTextureFromImage(perlinImg)

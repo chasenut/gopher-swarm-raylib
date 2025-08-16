@@ -2,6 +2,10 @@ module github.com/chasenut/gorl-learn
 
 go 1.24.6
 
+replace (
+	github.com/chasenut/gorl-learn/gopher => ../gopher	
+)
+
 require (
 	github.com/ebitengine/purego v0.8.4 // indirect
 	github.com/gen2brain/raylib-go/raylib v0.55.1 // indirect
