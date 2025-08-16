@@ -1,6 +1,10 @@
 package gopher
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	"fmt"
+
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 type Gopher struct {
 	Rect rl.Rectangle
@@ -8,35 +12,34 @@ type Gopher struct {
 }
 
 var (
-	GopherTexture rl.Texture2D = rl.LoadTexture("res/panic.png")
 	GopherSrc rl.Rectangle = rl.NewRectangle(0, 0, 240, 240)
-	Gophers []Gopher =  []Gopher{}
 )
 
-func DrawGophers(gophers []Gopher) {
+func DrawGophers(gophers []Gopher, texture rl.Texture2D) {
 	for _, g := range gophers {
-		rl.DrawTexturePro(GopherTexture, 
+		rl.DrawTexturePro(texture, 
 			GopherSrc, 
 			g.Rect,
-			rl.NewVector2(g.Rect.X, g.Rect.Y),
+			rl.NewVector2(0, 0),
 			0,
 			rl.White)
 	}
 }
 
-func CreateGopher(rect rl.Rectangle, vel rl.Vector2) {
+func AddGopher(gophers *[]Gopher, rect rl.Rectangle, vel rl.Vector2) {
 	g := Gopher {
 		Rect: rect,
 		Vel: vel,
 	}
-	Gophers = append(Gophers, g)
+	*gophers = append(*gophers, g)
 }
 
-func (g Gopher) Update(dt float32) {
-	g.Rect.X += g.Vel.X * dt
-	g.Rect.Y += g.Vel.Y * dt
+func UpdateGophers(gophers *[]Gopher, dt float32) {
+	for _, g := range *gophers {
+		fmt.Println("velx: ", g.Rect.X)
+		fmt.Println("vely: ", g.Rect.Y)
+		g.Rect.X += g.Vel.X * dt * 1000
+		g.Rect.Y += g.Vel.Y * dt * 1000
+	}
 }
 
-func ClearMemory() {
-	rl.UnloadTexture(GopherTexture)
-}

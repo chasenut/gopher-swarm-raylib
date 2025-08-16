@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/chasenut/gorl-learn/gopher"
+	"math/rand/v2"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -30,7 +31,24 @@ var (
 	cameraSpeed float32 = 250
 	cameraMoving bool = false
 	cameraUp, cameraDown, cameraRight, cameraLeft = false, false, false, false
+
+	gopherTexture rl.Texture2D
+	gophers []gopher.Gopher = []gopher.Gopher{}
 )
+
+func createGopher() {
+	rect := rl.NewRectangle(
+		cameraOffset.X,
+		cameraOffset.Y,
+		100.0,
+		100.0,
+		)
+	vel := rl.NewVector2(
+		(0.5-rand.Float32()) * 50, 
+		(0.5-rand.Float32()) * 50,
+		)
+	gopher.AddGopher(&gophers, rect, vel)
+}
 
 func input() {
 	if rl.IsKeyDown(rl.KeyW) || rl.IsKeyDown(rl.KeyUp) {
@@ -50,6 +68,7 @@ func input() {
 		cameraLeft = true
 	}
 	if rl.IsKeyPressed(rl.KeyQ) {
+		createGopher()
 	}
 }
 
@@ -76,6 +95,8 @@ func update() {
 	cameraMoving = false
 	cameraUp, cameraDown, cameraRight, cameraLeft = false, false, false, false
 	camera.Target = cameraOffset
+
+	gopher.UpdateGophers(&gophers, dt)
 }
 
 func drawScene() {
@@ -84,10 +105,13 @@ func drawScene() {
 
 	rl.DrawTexture(perlinTexture, 0, 0, hueTint)
 
+
 	rl.DrawText(fmt.Sprintf("%.2f", float32(1.0 / dt)),
 		int32(cameraOffset.X)-screenWidth/2+20, 
 		int32(cameraOffset.Y)-screenHeight/2+20, 
 		40, rl.LightGray)
+
+	gopher.DrawGophers(gophers, gopherTexture)
 }
 
 func render() {
@@ -114,12 +138,15 @@ func initialize() {
 	perlinImg = rl.GenImagePerlinNoise(800, 800, 0, 0, 5)
 	perlinTexture = rl.LoadTextureFromImage(perlinImg)
 
-
+	
+	gopherTexture = rl.LoadTexture("res/panic.png")
 }
 
 func exit() {
 	defer rl.CloseWindow()
 
+	rl.UnloadTexture(perlinTexture)
+	rl.UnloadTexture(gopherTexture)
 }
 
 func main() {
