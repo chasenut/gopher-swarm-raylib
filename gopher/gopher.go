@@ -19,8 +19,8 @@ var (
 
 func SetBounds(x, y, width, height, innerThickness float32) {
 	upperBound = rl.NewRectangle(x, y, width, innerThickness)
-	lowerBound = rl.NewRectangle(x, height-innerThickness, width, innerThickness)
-	rightBound = rl.NewRectangle(width-innerThickness, y, innerThickness, height)
+	lowerBound = rl.NewRectangle(x, y+height-innerThickness, width, innerThickness)
+	rightBound = rl.NewRectangle(x+width-innerThickness, y, innerThickness, height)
 	leftBound = rl.NewRectangle(x, y, innerThickness, height)
 	fmt.Println("new bounds set")
 }
@@ -77,16 +77,14 @@ func UpdateGophers(gophers []Gopher, dt float32) {
 		if rl.CheckCollisionRecs(newRect, upperBound) {
 			gophers[i].Vel.Y = -gophers[i].Vel.Y
 			newRect.Y = upperBound.Y + upperBound.Height
-		}
-		if rl.CheckCollisionRecs(newRect, lowerBound) {
+		} else if rl.CheckCollisionRecs(newRect, lowerBound) {
 			gophers[i].Vel.Y = -gophers[i].Vel.Y
 			newRect.Y = lowerBound.Y - lowerBound.Height - newRect.Height
 		}
 		if rl.CheckCollisionRecs(newRect, rightBound) {
 			gophers[i].Vel.X = -gophers[i].Vel.X
 			newRect.X = rightBound.X - rightBound.Width - newRect.Width
-		}
-		if rl.CheckCollisionRecs(newRect, leftBound) {
+		} else if rl.CheckCollisionRecs(newRect, leftBound) {
 			gophers[i].Vel.X = -gophers[i].Vel.X
 			newRect.X = leftBound.X + leftBound.Width
 		}

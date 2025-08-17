@@ -1,9 +1,9 @@
-module github.com/chasenut/gorl-learn
+module github.com/chasenut/gopher-swarm-raylib
 
 go 1.24.6
 
 replace (
-	github.com/chasenut/gorl-learn/gopher => ../gopher	
+	github.com/chasenut/gopher-swarm-raylib/gopher => ../gopher	
 )
 
 require (

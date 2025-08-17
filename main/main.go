@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/chasenut/gorl-learn/gopher"
+	"github.com/chasenut/gopher-swarm-raylib/gopher"
 	"math/rand/v2"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -104,7 +104,7 @@ func update() {
 	camera.Target = cameraOffset
 
 	if toogleGopherCreation {
-		for range 1 {
+		for range 10 {
 			createGopher()
 		}
 	}
@@ -131,7 +131,7 @@ func drawScene() {
 	rl.ClearBackground(bkgColor)
 
 
-	rl.DrawTexture(perlinTexture, 0, 0, hueTint)
+	rl.DrawTexture(perlinTexture, -400, -400, hueTint)
 
 	gopher.DrawGophers(gophers, gopherTexture)
 
@@ -165,7 +165,7 @@ func initialize() {
 
 	
 	gopherTexture = rl.LoadTexture("res/panic.png")
-	gopher.SetBounds(0, 0, 800, 800, 10)
+	gopher.SetBounds(-400, -400, 800, 800, 10)
 }
 
 func exit() {
