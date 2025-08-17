@@ -2,9 +2,6 @@ module github.com/chasenut/gopher-swarm-raylib
 
 go 1.24.6
 
-replace (
-	github.com/chasenut/gopher-swarm-raylib/gopher => ../gopher	
-)
 
 require (
 	github.com/ebitengine/purego v0.8.4 // indirect
