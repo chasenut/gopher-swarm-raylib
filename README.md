@@ -7,7 +7,7 @@ There is also perlin noise and hue color change.
 ## Run
 
 ```
-go run src/main.go
+go run main/main.go
 ```
 
 ## RTFM
